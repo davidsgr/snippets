@@ -1,2 +1,2 @@
 # snippets
-Various code snippets
+Contains various small code snippets, performance studies, etc...
