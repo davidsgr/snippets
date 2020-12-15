@@ -19,7 +19,7 @@
 Reaction_Hasher::Reaction_Hasher(unsigned int num_digits)
 {
   double basetwo_digits = (10.0 / 3.0) * static_cast<double>(num_digits);
-  d_basetwo_digits = std::ceil(basetwo_digits);    
+  d_basetwo_digits = std::ceil(basetwo_digits);
 }
 
 //---------------------------------------------------------------------------//
@@ -28,7 +28,7 @@ Reaction_Hasher::Reaction_Hasher(unsigned int num_digits)
 /*!
  * \brief Hash operator
  */
-auto Reaction_Hasher::operator()(const Reaction& rxn) -> value_type
+auto Reaction_Hasher::operator()(const Reaction& rxn) const -> value_type
 {
     value_type hash = INITIAL_BASIS;
 
@@ -43,7 +43,7 @@ auto Reaction_Hasher::operator()(const Reaction& rxn) -> value_type
 
     return hash;
 }
-    
+
 //---------------------------------------------------------------------------//
 // PRIVATE FUNTIONS
 //---------------------------------------------------------------------------//

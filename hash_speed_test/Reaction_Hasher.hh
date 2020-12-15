@@ -26,13 +26,13 @@ class Reaction_Hasher
     static constexpr value_type MAGIC_PRIME   = 0x00000100000001b3ull;
 
     int d_basetwo_digits;
-    
+
   public:
     // Constructor
-    inline explicit Reaction_Hasher(unsigned int num_digits);
+    inline explicit Reaction_Hasher(unsigned int num_digits = 4);
 
     // Hashing operator
-    inline value_type operator()(const Reaction& rxn);
+    inline value_type operator()(const Reaction& rxn) const;
 
   private:
     // Hash the given integral value
