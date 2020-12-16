@@ -1,1 +1,1 @@
-g++ -std=c++11 -O3 hash_speed_test.cc -o hash_speed_test
+g++-9 -std=c++11 -O3 hash_speed_test.cc -o hash_speed_test
