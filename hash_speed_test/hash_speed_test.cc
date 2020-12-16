@@ -214,6 +214,65 @@ int main()
                   std::chrono::milliseconds>(t2 - t1).count()
               << " ms" << std::endl;
 
+    // >>> LOOKUP METHOD 2: Given a reaction at some temperature between 300
+    // >>> and 900, lookup the reaction index using method 2:
+    // 1) Use lower bound to get the reaction *not less* than the requested
+    //    reaction.
+    // 2) Use this to find the closest temperature
+    // Loop and sample. Time the method
+    using Clock = std::chrono::high_resolution_clock;
+    auto t3 = Clock::now();
+    num_samples = 100000000;
+    for (unsigned int sample = 0; sample < num_samples; ++sample)
+    {
+        // Sample ZAID and MT
+        int zaid_index = rand() % (zaids.size());
+        int mt_index = rand() % (mts.size());
+        // Sample random temperature between 1200 and 300
+        tfloat_type temperature
+            = (static_cast<double>(rand()) / RAND_MAX) * (1200 - 300) + 300;
+
+        // Get the ZAID
+        ZAID zaid = zaids[zaid_index];
+        MT mt = mts[mt_index];
+
+        // Step 1: Lookup this reaction in the map
+        auto iter = rim.lower_bound(Reaction{zaid, temperature, mt});
+
+        // Step 2: Lookup for a reaction at the next lowest temperature
+        if (iter != rim.begin())
+        {
+            auto iter2 = iter;
+            --iter2;
+            
+            // First possibility: iter doesn't point to the right zaid and mt,
+            // in which case we take iter 2
+            if (iter->first.zaid != zaid || iter->first.mt != mt)
+            {
+                iter = iter2;
+            }
+            // Second possibility: iter-1 is at a closer temperature
+            else if (iter2->first.zaid == zaid && iter2->first.mt == mt)
+            {
+                tfloat_type tdiff1 = iter->first.temperature - temperature;
+                tfloat_type tdiff2 = temperature - iter2->first.temperature;
+                
+                if (tdiff2 < tdiff1)
+                    iter = iter2;
+            }
+        }
+
+        // Now iter points to the closest reaction.  Get the index
+        index_type idx = iter->second;
+    }
+    auto t4 = Clock::now();
+    std::cout << "Method 2: "
+              << std::chrono::duration_cast<
+                  std::chrono::milliseconds>(t4 - t3).count()
+              << " ms" << std::endl;
+
+
+    
     return 0;
 }
 
